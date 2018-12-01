@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 class SubscriptionController {
 
   private Mailer mailer = new Mailer();
-  private SubscriptionRepository subscriptionRepository;
+  private SubscriptionService subscriptionService;
 
-  SubscriptionController(SubscriptionRepository subscriptionRepository) {
-    this.subscriptionRepository = subscriptionRepository;
+  SubscriptionController(SubscriptionService subscriptionService) {
+    this.subscriptionService = subscriptionService;
   }
 
-  @PutMapping(path = "/save", consumes = APPLICATION_JSON_VALUE)
-  ResponseEntity<?> save(@RequestBody Subscription subscription) {
-    subscriptionRepository.save(subscription);
+  @PutMapping(path = "/create-subscription", consumes = APPLICATION_JSON_VALUE)
+  ResponseEntity<?> save(@RequestBody SubscriptionRequest subscriptionRequest) {
+    subscriptionService.saveSubscription(subscriptionRequest);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
