@@ -106,3 +106,10 @@ jacocoTestCoverageVerification {
     }
 }
 check.dependsOn jacocoTestCoverageVerification
+
+checkstyle {
+    toolVersion = '8.4'
+    configFile = new File(rootDir, "checkstyle.xml")
+}
+check.dependsOn checkstyleMain
+check.dependsOn checkstyleTest
