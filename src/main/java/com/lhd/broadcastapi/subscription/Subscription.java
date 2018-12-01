@@ -1,4 +1,4 @@
-package subscription;
+package com.lhd.broadcastapi.subscription;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
