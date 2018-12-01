@@ -87,11 +87,13 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: [])
+                    exclude: ['com/lhd/broadcastapi/util/**',
+                              'com/lhd/broadcastapi/config/**',
+                              'com/lhd/broadcastapi/BroadcastApplication.class'])
         })
     }
 }
-//test.finalizedBy jacocoTestReport
+test.finalizedBy jacocoTestReport
 
 jacocoTestCoverageVerification {
     violationRules {
@@ -106,11 +108,13 @@ jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: [])
+                    exclude: ['com/lhd/broadcastapi/util/**',
+                              'com/lhd/broadcastapi/config/**',
+                              'com/lhd/broadcastapi/BroadcastApplication.class'])
         })
     }
 }
-//check.dependsOn jacocoTestCoverageVerification
+check.dependsOn jacocoTestCoverageVerification
 
 checkstyle {
     toolVersion = '8.4'
