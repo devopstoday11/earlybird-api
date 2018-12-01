@@ -11,11 +11,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.Validate;
 
 @Entity
 @Table(name = "subscription")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class Subscription {
 
@@ -28,6 +31,7 @@ class Subscription {
   private String email;
 
   @Column(name = "last_checked_timestamp")
+  @Setter
   private Instant lastCheckedTimestamp;
 
   @ManyToOne

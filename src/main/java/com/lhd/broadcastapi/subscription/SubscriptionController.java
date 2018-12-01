@@ -28,7 +28,7 @@ class SubscriptionController {
 
   @GetMapping(path = "/send-email")
   void sendEmail() {
-    mailer.send();
+    mailer.send("mitchell.k.irvin@gmail.com", "notification message thingy");
   }
 
 }

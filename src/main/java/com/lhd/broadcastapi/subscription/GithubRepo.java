@@ -1,16 +1,20 @@
 package com.lhd.broadcastapi.subscription;
 
+import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.Validate;
 
 @Entity
 @Table(name = "github_repo")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class GithubRepo {
 
@@ -18,11 +22,16 @@ class GithubRepo {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "latest_issue_timestamp")
-  private String latestIssueTimestamp;
+  @Column(name = "latest_issue_timestamp", nullable = false)
+  @Setter
+  private Instant latestIssueTimestamp;
+
+  @Column(name = "latest_issue_url")
+  @Setter
+  private String latestIssueUrl;
 
   @Builder
-  private GithubRepo(String id, String latestIssueTimestamp) {
+  private GithubRepo(String id, Instant latestIssueTimestamp) {
     Validate.notEmpty(id);
     Validate.notNull(latestIssueTimestamp);
 
