@@ -1,4 +1,4 @@
-package subscription;
+package com.lhd.broadcastapi.subscription;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;

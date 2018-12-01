@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath(group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${springBootVersion}")
-        classpath(group: 'com.google.cloud.tools', name: 'appengine-gradle-plugin', version: '2.0.0-rc2')
+//        classpath(group: 'com.google.cloud.tools', name: 'appengine-gradle-plugin', version: '2.0.0-rc2')
     }
 }
 
@@ -18,7 +18,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
-apply plugin: 'com.google.cloud.tools.appengine'
+//apply plugin: 'com.google.cloud.tools.appengine'
 
 group 'com.broadcastapi'
 version '1.0-SNAPSHOT'
@@ -34,10 +34,12 @@ dependencies {
 
     compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.0.2.RELEASE') {
         // GAE runs on Jetty, not Tomcat, must manually disable
-        exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat')
+//        exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat')
     }
 
     compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7')
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.0'
+
 
     compile(group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '0.25.0.RELEASE')
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2')
@@ -50,7 +52,7 @@ dependencies {
     compile(group: 'com.google.cloud.sql', name: 'mysql-socket-factory-connector-j-8', version: '1.0.11')
     compile(group: 'com.h2database', name: 'h2', version: '1.4.197')
 
-    compile(group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.63')
+//    compile(group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.63')
     compile(group: 'org.projectlombok', name: 'lombok', version: '1.18.2') {
         exclude(group: 'org.slf4j', module: 'jul-to-slf4j')
     }
@@ -62,12 +64,15 @@ dependencies {
 }
 
 
-appengine {
-    deploy {
-        version = "GCLOUD_CONFIG"
-        project = "GCLOUD_CONFIG"
-    }
-}
+//appengine {
+//    deploy {
+//        version = "GCLOUD_CONFIG"
+//        project = "GCLOUD_CONFIG"
+//    }
+//    run {
+//        port = 8080
+//    }
+//}
 
 jacoco {
     toolVersion = '0.8.1'
@@ -82,7 +87,9 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: [])
+                    exclude: ['com/lhd/broadcastapi/util/**',
+                              'com/lhd/broadcastapi/config/**',
+                              'com/lhd/broadcastapi/BroadcastApplication.class'])
         })
     }
 }
@@ -101,7 +108,9 @@ jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: [])
+                    exclude: ['com/lhd/broadcastapi/util/**',
+                              'com/lhd/broadcastapi/config/**',
+                              'com/lhd/broadcastapi/BroadcastApplication.class'])
         })
     }
 }
