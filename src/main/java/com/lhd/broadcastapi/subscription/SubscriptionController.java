@@ -21,7 +21,7 @@ class SubscriptionController {
   }
 
   @PutMapping(path = "/create-subscription", consumes = APPLICATION_JSON_VALUE)
-  ResponseEntity<?> save(@RequestBody SubscriptionRequest subscriptionRequest) {
+  ResponseEntity<?> save(@RequestBody SubscriptionRequestDto subscriptionRequest) {
     subscriptionService.saveSubscription(subscriptionRequest);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }

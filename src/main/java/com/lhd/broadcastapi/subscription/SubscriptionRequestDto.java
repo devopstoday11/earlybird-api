@@ -3,7 +3,7 @@ package com.lhd.broadcastapi.subscription;
 import lombok.Data;
 
 @Data
-public class SubscriptionRequest {
+public class SubscriptionRequestDto {
 
   private String email;
   private String owner;
