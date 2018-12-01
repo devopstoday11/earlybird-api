@@ -1,6 +1,24 @@
-plugins {
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.0.2.RELEASE'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath(group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${springBootVersion}")
+        classpath(group: 'com.google.cloud.tools', name: 'appengine-gradle-plugin', version: '2.0.0-rc2')
+    }
 }
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
+apply plugin: 'com.google.cloud.tools.appengine'
 
 group 'com.broadcastapi'
 version '1.0-SNAPSHOT'
@@ -12,5 +30,44 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1')
+
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.0.2.RELEASE') {
+        // GAE runs on Jetty, not Tomcat, must manually disable
+        exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat')
+    }
+
+    compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7')
+
+    compile(group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '0.25.0.RELEASE')
+    compile(group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2')
+    compile(group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2')
+    compile(group: 'org.scala-lang', name: 'scala-library', version: '2.11.8')
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.0.3.RELEASE')
+
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.0.5.RELEASE')
+    compile(group: 'mysql', name: 'mysql-connector-java', version: '8.0.11')
+    compile(group: 'com.google.cloud.sql', name: 'mysql-socket-factory-connector-j-8', version: '1.0.11')
+    compile(group: 'com.h2database', name: 'h2', version: '1.4.197')
+
+    compile(group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.63')
+    compile(group: 'org.projectlombok', name: 'lombok', version: '1.18.2') {
+        exclude(group: 'org.slf4j', module: 'jul-to-slf4j')
+    }
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8'
+
+    testCompile(group: 'junit', name: 'junit', version: '4.12')
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}")
+
+}
+
+
+appengine {
+    deploy {
+        version = "GCLOUD_CONFIG"
+        project = "GCLOUD_CONFIG"
+    }
+    run {
+        port = 8080
+    }
 }
