@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 
 public class Mailer {
 
-  public void send() {
+  public void send(String to, String notification) {
     Properties props = new Properties();
     props.put("mail.smtp.host", "smtp.gmail.com");
     props.put("mail.smtp.socketFactory.port", "465");
@@ -30,14 +30,13 @@ public class Mailer {
     try {
       Message message = new MimeMessage(session);
       message.setRecipients(Message.RecipientType.TO,
-          InternetAddress.parse("mitchell.k.irvin@gmail.com"));
-      message.setSubject("Testing Subject");
-      message.setText("Dear Mail Crawler,"
-          + "\n\n No spam to my email, please!");
+          InternetAddress.parse(to));
+      message.setSubject("A New Issue is Open!");
+      message.setText(notification);
 
       Transport.send(message);
 
-      System.out.println("Done");
+      System.out.println("Email sent to: " + to);
 
     } catch (MessagingException e) {
       throw new RuntimeException(e);

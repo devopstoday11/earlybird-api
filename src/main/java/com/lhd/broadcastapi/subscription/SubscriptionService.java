@@ -42,7 +42,7 @@ public class SubscriptionService {
     } else {
       githubRepo = GithubRepo.builder()
           .id(githubRepoId)
-          .latestIssueTimestamp(findLatestIssueTimestamp(githubRepoId))
+          .latestIssueTimestamp(Instant.parse(findLatestIssue(githubRepoId).getCreated_at()))
           .build();
       githubRepoRepository.save(githubRepo);
     }
@@ -50,10 +50,7 @@ public class SubscriptionService {
     return githubRepo;
   }
 
-
-  private static final String URI = "repos/{githubRepoId}/issues";
-
-  private String findLatestIssueTimestamp(String githubRepoId) {
+  IssueDto findLatestIssue(String githubRepoId) {
 
     try {
       ProcessBuilder pb = new ProcessBuilder(
@@ -71,7 +68,6 @@ public class SubscriptionService {
       String line;
 
       while ((line = br.readLine()) != null) {
-        System.out.println("read line from curl command: " + line);
         responseStrBuilder.append(line);
       }
       String s = responseStrBuilder.toString();
@@ -79,14 +75,16 @@ public class SubscriptionService {
       IssueDto[] issues = new Gson().fromJson(s, IssueDto[].class);
 
       if (issues.length > 0) {
-        return issues[0].getCreated_at();
+        return issues[0];
       }
 
     } catch (IOException e) {
       // swallowing, sorry friend
     }
 
-    return Instant.now().toString();
+    IssueDto issueDto = new IssueDto();
+    issueDto.setCreated_at(Instant.EPOCH.toString());
+    return issueDto;
   }
 
 }

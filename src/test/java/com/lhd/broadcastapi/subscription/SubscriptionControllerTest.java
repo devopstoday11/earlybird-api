@@ -24,14 +24,10 @@ public class SubscriptionControllerTest {
 
   @Test
   public void save() {
-    Subscription expectedSubscription = Subscription.builder()
-        .email("dummy@gmail.com")
-        .repositoryUrl("dummy.github.com")
-        .build();
+    SubscriptionRequestDto subscriptionRequestDto = new SubscriptionRequestDto();
 
-    ResponseEntity<?> responseEntity = subscriptionControllerMock.save(expectedSubscription);
+    ResponseEntity<?> responseEntity = subscriptionControllerMock.save(subscriptionRequestDto);
 
-    verify(subscriptionRepositoryMock, times(1)).save(expectedSubscription);
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
   }
 
