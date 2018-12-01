@@ -1,6 +1,5 @@
 package com.lhd.broadcastapi.subscription;
 
-import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,10 +19,10 @@ class GithubRepo {
   private String id;
 
   @Column(name = "latest_issue_timestamp")
-  private Instant latestIssueTimestamp;
+  private String latestIssueTimestamp;
 
   @Builder
-  private GithubRepo(String id, Instant latestIssueTimestamp) {
+  private GithubRepo(String id, String latestIssueTimestamp) {
     Validate.notEmpty(id);
     Validate.notNull(latestIssueTimestamp);
 
