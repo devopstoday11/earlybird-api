@@ -6,7 +6,7 @@ import lombok.Data;
 public class SubscriptionRequestDto {
 
   private String email;
-  private String owner;
+  private String repoOwner;
   private String repoName;
 
 }

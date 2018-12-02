@@ -1,11 +1,13 @@
 package com.lhd.broadcastapi.subscription;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +35,7 @@ public class SubscriptionService {
   }
 
   private GithubRepo findGithubRepo(SubscriptionRequestDto subscriptionRequest) {
-    String githubRepoId = subscriptionRequest.getOwner() + "/" + subscriptionRequest.getRepoName();
+    String githubRepoId = subscriptionRequest.getRepoOwner() + "/" + subscriptionRequest.getRepoName();
     Optional<GithubRepo> optionalRepo = githubRepoRepository.findById(githubRepoId);
     GithubRepo githubRepo;
 
@@ -55,6 +57,8 @@ public class SubscriptionService {
     try {
       ProcessBuilder pb = new ProcessBuilder(
           "curl",
+          "-u",
+          "mitchellirvin:1a2bcafe309386e8e6a490c2bef823d9ec03c609",
           "-X",
           "GET",
           "https://api.github.com/repos/" + githubRepoId + "/issues");
@@ -71,6 +75,12 @@ public class SubscriptionService {
         responseStrBuilder.append(line);
       }
       String s = responseStrBuilder.toString();
+
+//      List<IssueDto> issues = new Gson().fromJson(s, new TypeToken<List<IssueDto>>(){}.getType());
+//
+//      if (issues.size() > 0) {
+//        return issues.get(0);
+//      }
 
       IssueDto[] issues = new Gson().fromJson(s, IssueDto[].class);
 
