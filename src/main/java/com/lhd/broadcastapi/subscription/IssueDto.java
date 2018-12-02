@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 class IssueDto {
 
   private String created_at;
-  private String url;
+  private String html_url;
 
 }

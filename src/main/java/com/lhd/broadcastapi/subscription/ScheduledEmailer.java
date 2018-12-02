@@ -42,7 +42,7 @@ public class ScheduledEmailer {
     for (GithubRepo githubRepo : githubRepos) {
       IssueDto latestIssue = subscriptionService.findLatestIssue(githubRepo.getId());
       githubRepo.setLatestIssueTimestamp(Instant.parse(latestIssue.getCreated_at()));
-      githubRepo.setLatestIssueUrl(latestIssue.getUrl());
+      githubRepo.setLatestIssueUrl(latestIssue.getHtml_url());
     }
     githubRepoRepository.saveAll(githubRepos);
   }

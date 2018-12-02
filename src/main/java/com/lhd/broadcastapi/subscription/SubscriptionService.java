@@ -58,7 +58,7 @@ public class SubscriptionService {
       ProcessBuilder pb = new ProcessBuilder(
           "curl",
           "-u",
-          "mitchellirvin:1a2bcafe309386e8e6a490c2bef823d9ec03c609",
+          "mitchellirvin:",
           "-X",
           "GET",
           "https://api.github.com/repos/" + githubRepoId + "/issues");
@@ -76,11 +76,6 @@ public class SubscriptionService {
       }
       String s = responseStrBuilder.toString();
 
-//      List<IssueDto> issues = new Gson().fromJson(s, new TypeToken<List<IssueDto>>(){}.getType());
-//
-//      if (issues.size() > 0) {
-//        return issues.get(0);
-//      }
 
       IssueDto[] issues = new Gson().fromJson(s, IssueDto[].class);
 
