@@ -6,9 +6,15 @@ Major League Hacking : Oxford College at Emory University
 Date: December 01, 2018
 
 # What link is this project currently deployed too?
-Deployed at: 
+Deployed at: N/A
 
 
 # IN CELEBRATION OF
 Local Hack Day
+
+
+
+
+
+
 
