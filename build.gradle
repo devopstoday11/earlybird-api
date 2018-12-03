@@ -8,7 +8,6 @@ buildscript {
     }
     dependencies {
         classpath(group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: "${springBootVersion}")
-//        classpath(group: 'com.google.cloud.tools', name: 'appengine-gradle-plugin', version: '2.0.0-rc2')
     }
 }
 
@@ -18,7 +17,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
-//apply plugin: 'com.google.cloud.tools.appengine'
 
 group 'com.broadcastapi'
 version '1.0-SNAPSHOT'
@@ -32,11 +30,7 @@ repositories {
 dependencies {
     compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1')
 
-    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.0.2.RELEASE') {
-        // GAE runs on Jetty, not Tomcat, must manually disable
-//        exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat')
-    }
-
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.0.2.RELEASE')
     compile(group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7')
     compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.0'
 
@@ -44,18 +38,15 @@ dependencies {
     compile(group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '0.25.0.RELEASE')
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2')
     compile(group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2')
-    compile(group: 'org.scala-lang', name: 'scala-library', version: '2.11.8')
-    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.0.3.RELEASE')
 
     compile(group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.0.5.RELEASE')
     compile(group: 'mysql', name: 'mysql-connector-java', version: '8.0.11')
     compile(group: 'com.google.cloud.sql', name: 'mysql-socket-factory-connector-j-8', version: '1.0.11')
     compile(group: 'com.h2database', name: 'h2', version: '1.4.197')
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.1.2.RELEASE'
 
-
-//    compile(group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: '1.9.63')
     compile(group: 'org.projectlombok', name: 'lombok', version: '1.18.2') {
         exclude(group: 'org.slf4j', module: 'jul-to-slf4j')
     }
@@ -65,17 +56,6 @@ dependencies {
     testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}")
 
 }
-
-
-//appengine {
-//    deploy {
-//        version = "GCLOUD_CONFIG"
-//        project = "GCLOUD_CONFIG"
-//    }
-//    run {
-//        port = 8080
-//    }
-//}
 
 jacoco {
     toolVersion = '0.8.1'

@@ -57,8 +57,6 @@ public class SubscriptionService {
     try {
       ProcessBuilder pb = new ProcessBuilder(
           "curl",
-          "-u",
-          "mitchellirvin:",
           "-X",
           "GET",
           "https://api.github.com/repos/" + githubRepoId + "/issues");
