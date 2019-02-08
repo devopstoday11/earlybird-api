@@ -7,12 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SubscriptionService {
+
+  @Value("${oauth.token}")
+  private String oAuthToken;
 
   private SubscriptionRepository subscriptionRepository;
   private GithubRepoRepository githubRepoRepository;
@@ -55,12 +61,8 @@ public class SubscriptionService {
   IssueDto findLatestIssue(String githubRepoId) {
 
     try {
-      ProcessBuilder pb = new ProcessBuilder(
-          "curl",
-          "-X",
-          "GET",
-          "https://api.github.com/repos/" + githubRepoId + "/issues");
-
+      List<String> commandAndArgs = createCurlCommand(githubRepoId);
+      ProcessBuilder pb = new ProcessBuilder(commandAndArgs);
       Process p = pb.start();
 
       InputStream is = p.getInputStream();
@@ -73,7 +75,8 @@ public class SubscriptionService {
         responseStrBuilder.append(line);
       }
       String s = responseStrBuilder.toString();
-
+      System.out.println("RESPONSE: ");
+      System.out.println(s);
 
       IssueDto[] issues = new Gson().fromJson(s, IssueDto[].class);
 
@@ -82,12 +85,26 @@ public class SubscriptionService {
       }
 
     } catch (IOException e) {
-      // swallowing, sorry friend
+      System.out.println(e.getMessage());
     }
 
     IssueDto issueDto = new IssueDto();
     issueDto.setCreated_at(Instant.EPOCH.toString());
     return issueDto;
+  }
+
+  private List<String> createCurlCommand(String githubRepoId) {
+    List<String> commandAndArgs = new ArrayList<>();
+    commandAndArgs.add("curl");
+
+    if (!oAuthToken.equals("${oauth.token}")) {
+      commandAndArgs.add("-H");
+      commandAndArgs.add("Authorization: token " + oAuthToken);
+    }
+
+    commandAndArgs.add("https://api.github.com/repos/" + githubRepoId + "/issues");
+
+    return commandAndArgs;
   }
 
 }
