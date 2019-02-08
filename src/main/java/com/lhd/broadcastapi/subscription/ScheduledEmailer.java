@@ -13,36 +13,35 @@ public class ScheduledEmailer {
   private static final int ONE_MINUTE = 60000;
 
   private Mailer mailer = new Mailer();
-  private SubscriptionRepository subscriptionRepository;
-  private SubscriptionService subscriptionService;
+  private GithubRepoService githubRepoService;
   private GithubRepoRepository githubRepoRepository;
+  private SubscriptionRepository subscriptionRepository;
 
-  ScheduledEmailer(SubscriptionService subscriptionService,
-      SubscriptionRepository subscriptionRepository,
-      GithubRepoRepository githubRepoRepository) {
-    this.subscriptionService = subscriptionService;
-    this.subscriptionRepository = subscriptionRepository;
+  private ScheduledEmailer(
+      GithubRepoService githubRepoService,
+      GithubRepoRepository githubRepoRepository,
+      SubscriptionRepository subscriptionRepository) {
+    this.githubRepoService = githubRepoService;
     this.githubRepoRepository = githubRepoRepository;
+    this.subscriptionRepository = subscriptionRepository;
   }
 
   @Scheduled(fixedDelay = TEN_SECONDS)
-  public void sendEmailNotifications() {
-    updateGithubRepoLatestIssueTimestampsAndUrls();
-
+  public void sendEmailNotificationsForNewIssues() {
+    updateAllGithubReposLatestIssueTimestampsAndUrls();
     Instant newLastCheckedTimestamp = Instant.now();
     for (Subscription subscription : subscriptionRepository.findAll()) {
       sendEmailIfNewIssueExists(subscription);
-      subscription.setLastCheckedTimestamp(newLastCheckedTimestamp);
-      subscriptionRepository.save(subscription);
+      updateLastCheckedTimestampAndSave(newLastCheckedTimestamp, subscription);
     }
   }
 
-  private void updateGithubRepoLatestIssueTimestampsAndUrls() {
+  private void updateAllGithubReposLatestIssueTimestampsAndUrls() {
     List<GithubRepo> githubRepos = githubRepoRepository.findAll();
     for (GithubRepo githubRepo : githubRepos) {
-      IssueDto latestIssue = subscriptionService.findLatestIssue(githubRepo.getId());
-      githubRepo.setLatestIssueTimestamp(Instant.parse(latestIssue.getCreated_at()));
-      githubRepo.setLatestIssueUrl(latestIssue.getHtml_url());
+      IssueDto latestIssue = githubRepoService.findLatestIssue(githubRepo.getId());
+      githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreated_at()));
+      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtml_url());
     }
     githubRepoRepository.saveAll(githubRepos);
   }
@@ -50,13 +49,16 @@ public class ScheduledEmailer {
   private void sendEmailIfNewIssueExists(Subscription subscription) {
     Instant lastCheckedTimestamp = subscription.getLastCheckedTimestamp();
     GithubRepo githubRepo = subscription.getGithubRepo();
-    Instant latestIssueTimestamp = githubRepo.getLatestIssueTimestamp();
+    Instant latestIssueTimestamp = githubRepo.getLatestRecordedIssueTimestamp();
     if (latestIssueTimestamp.isAfter(lastCheckedTimestamp)) {
       mailer.send(subscription.getEmail(), "A new issue has been opened on a project you're "
-          + "interested in. Find it here: " + githubRepo.getLatestIssueUrl());
-    } else {
-      System.out.println("No more recent issues found for: " + githubRepo.getId());
+          + "interested in. Find it here: " + githubRepo.getLatestRecordedIssueUrl());
     }
+  }
+
+  private void updateLastCheckedTimestampAndSave(Instant newLastCheckedTimestamp, Subscription subscription) {
+    subscription.setLastCheckedTimestamp(newLastCheckedTimestamp);
+    subscriptionRepository.save(subscription);
   }
 
 }

@@ -24,19 +24,19 @@ class GithubRepo {
 
   @Column(name = "latest_issue_timestamp", nullable = false)
   @Setter
-  private Instant latestIssueTimestamp;
+  private Instant latestRecordedIssueTimestamp;
 
   @Column(name = "latest_issue_url")
   @Setter
-  private String latestIssueUrl;
+  private String latestRecordedIssueUrl;
 
   @Builder
-  private GithubRepo(String id, Instant latestIssueTimestamp) {
+  private GithubRepo(String id, Instant latestRecordedIssueTimestamp) {
     Validate.notEmpty(id);
-    Validate.notNull(latestIssueTimestamp);
+    Validate.notNull(latestRecordedIssueTimestamp);
 
     this.id = id;
-    this.latestIssueTimestamp = latestIssueTimestamp;
+    this.latestRecordedIssueTimestamp = latestRecordedIssueTimestamp;
   }
 
 }
