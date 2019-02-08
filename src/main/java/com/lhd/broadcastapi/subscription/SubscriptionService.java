@@ -31,7 +31,6 @@ public class SubscriptionService {
 
   void saveSubscription(SubscriptionRequestDto subscriptionRequest) {
     GithubRepo githubRepo = findGithubRepo(subscriptionRequest);
-
     Subscription subscription = Subscription.builder()
         .email(subscriptionRequest.getEmail())
         .githubRepo(githubRepo)
@@ -48,9 +47,10 @@ public class SubscriptionService {
     if (optionalRepo.isPresent()) {
       githubRepo = optionalRepo.get();
     } else {
+      Instant latestIssueTimestamp = Instant.parse(findLatestIssue(githubRepoId).getCreated_at());
       githubRepo = GithubRepo.builder()
           .id(githubRepoId)
-          .latestIssueTimestamp(Instant.parse(findLatestIssue(githubRepoId).getCreated_at()))
+          .latestIssueTimestamp(latestIssueTimestamp)
           .build();
       githubRepoRepository.save(githubRepo);
     }
