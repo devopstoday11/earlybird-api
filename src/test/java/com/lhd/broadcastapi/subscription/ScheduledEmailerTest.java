@@ -79,11 +79,11 @@ public class ScheduledEmailerTest {
 
   private void createIssueDtos() {
     issueDto1 = new IssueDto();
-    issueDto1.setCreated_at(currentTimePlus5Seconds.toString());
-    issueDto1.setHtml_url("http://github.com/user/repo/issue1");
+    issueDto1.setCreatedAt(currentTimePlus5Seconds.toString());
+    issueDto1.setHtmlUrl("http://github.com/user/repo/issue1");
     issueDto2 = new IssueDto();
-    issueDto2.setCreated_at(currentTimeMinus5Seconds.toString());
-    issueDto2.setHtml_url("http://github.com/user/repo/issue2");
+    issueDto2.setCreatedAt(currentTimeMinus5Seconds.toString());
+    issueDto2.setHtmlUrl("http://github.com/user/repo/issue2");
   }
 
   private void createGithubRepos() {

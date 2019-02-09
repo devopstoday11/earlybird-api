@@ -42,8 +42,8 @@ class ScheduledEmailer {
     List<GithubRepo> githubRepos = githubRepoRepository.findAll();
     for (GithubRepo githubRepo : githubRepos) {
       IssueDto latestIssue = githubRepoService.findLatestIssue(githubRepo.getId());
-      githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreated_at()));
-      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtml_url());
+      githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreatedAt()));
+      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
     }
     githubRepoRepository.saveAll(githubRepos);
   }

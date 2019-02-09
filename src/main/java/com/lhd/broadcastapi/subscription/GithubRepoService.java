@@ -1,6 +1,6 @@
 package com.lhd.broadcastapi.subscription;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 class GithubRepoService {
 
   @Value("${oauth.token}")
-  private String oAuthToken;
+  private String authToken;
 
   private GithubRepoRepository githubRepoRepository;
 
@@ -32,7 +32,8 @@ class GithubRepoService {
     if (optionalRepo.isPresent()) {
       githubRepo = optionalRepo.get();
     } else {
-      Instant latestIssueTimestamp = Instant.parse(findLatestIssue(githubRepoId).getCreated_at());
+      String s = findLatestIssue(githubRepoId).getCreatedAt();
+      Instant latestIssueTimestamp = Instant.parse(s);
       githubRepo = GithubRepo.builder()
           .id(githubRepoId)
           .latestRecordedIssueTimestamp(latestIssueTimestamp)
@@ -63,7 +64,7 @@ class GithubRepoService {
       System.out.println("RESPONSE: ");
       System.out.println(s);
 
-      IssueDto[] issues = new Gson().fromJson(s, IssueDto[].class);
+      IssueDto[] issues = new ObjectMapper().readValue(s, IssueDto[].class);
 
       if (issues.length > 0) {
         return issues[0];
@@ -74,7 +75,7 @@ class GithubRepoService {
     }
 
     IssueDto issueDto = new IssueDto();
-    issueDto.setCreated_at(Instant.EPOCH.toString());
+    issueDto.setCreatedAt(Instant.EPOCH.toString());
     return issueDto;
   }
 
@@ -82,9 +83,9 @@ class GithubRepoService {
     List<String> commandAndArgs = new ArrayList<>();
     commandAndArgs.add("curl");
 
-    if (!oAuthToken.equals("${oauth.token}")) {
+    if (!authToken.equals("${oauth.token}")) {
       commandAndArgs.add("-H");
-      commandAndArgs.add("Authorization: token " + oAuthToken);
+      commandAndArgs.add("Authorization: token " + authToken);
     }
 
     commandAndArgs.add("https://api.github.com/repos/" + githubRepoId + "/issues");
