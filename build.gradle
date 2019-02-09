@@ -76,7 +76,7 @@ jacocoTestReport {
         })
     }
 }
-//test.finalizedBy jacocoTestReport
+test.finalizedBy jacocoTestReport
 
 jacocoTestCoverageVerification {
     violationRules {
@@ -97,7 +97,7 @@ jacocoTestCoverageVerification {
         })
     }
 }
-//check.dependsOn jacocoTestCoverageVerification
+check.dependsOn jacocoTestCoverageVerification
 
 checkstyle {
     toolVersion = '8.4'

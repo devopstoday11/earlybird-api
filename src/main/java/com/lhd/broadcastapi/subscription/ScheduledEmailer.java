@@ -7,27 +7,29 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ScheduledEmailer {
+class ScheduledEmailer {
 
   private static final int TEN_SECONDS = 10000;
   private static final int ONE_MINUTE = 60000;
 
-  private Mailer mailer = new Mailer();
+  private Mailer mailer;
   private GithubRepoService githubRepoService;
   private GithubRepoRepository githubRepoRepository;
   private SubscriptionRepository subscriptionRepository;
 
   private ScheduledEmailer(
+      Mailer mailer,
       GithubRepoService githubRepoService,
       GithubRepoRepository githubRepoRepository,
       SubscriptionRepository subscriptionRepository) {
+    this.mailer = mailer;
     this.githubRepoService = githubRepoService;
     this.githubRepoRepository = githubRepoRepository;
     this.subscriptionRepository = subscriptionRepository;
   }
 
   @Scheduled(fixedDelay = TEN_SECONDS)
-  public void sendEmailNotificationsForNewIssues() {
+  void sendEmailNotificationsForNewIssues() {
     updateAllGithubReposLatestIssueTimestampsAndUrls();
     Instant newLastCheckedTimestamp = Instant.now();
     for (Subscription subscription : subscriptionRepository.findAll()) {

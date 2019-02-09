@@ -8,7 +8,9 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Mailer {
 
   public void send(String to, String notification) {
@@ -20,6 +22,7 @@ public class Mailer {
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.port", "465");
 
+    // TODO: create new gmail account named earlybirdnoreply
     Session session = Session.getDefaultInstance(props,
         new javax.mail.Authenticator() {
           protected PasswordAuthentication getPasswordAuthentication() {
