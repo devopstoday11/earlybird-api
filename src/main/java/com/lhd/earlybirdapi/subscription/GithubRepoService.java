@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.subscription;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;

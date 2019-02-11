@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.util;
+package com.lhd.earlybirdapi.util;
 
 import org.junit.Test;
 

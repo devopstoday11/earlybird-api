@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.util;
+package com.lhd.earlybirdapi.util;
 
 import java.util.Properties;
 import javax.mail.Message;

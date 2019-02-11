@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi;
+package com.lhd.earlybirdapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

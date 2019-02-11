@@ -1,8 +1,8 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.subscription;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.lhd.broadcastapi.util.Mailer;
+import com.lhd.earlybirdapi.util.Mailer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

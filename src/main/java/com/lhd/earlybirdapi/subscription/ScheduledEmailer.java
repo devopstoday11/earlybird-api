@@ -1,6 +1,6 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.subscription;
 
-import com.lhd.broadcastapi.util.Mailer;
+import com.lhd.earlybirdapi.util.Mailer;
 import java.time.Instant;
 import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;

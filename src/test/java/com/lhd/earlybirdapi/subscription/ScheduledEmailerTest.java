@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.subscription;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.lhd.broadcastapi.util.Mailer;
+import com.lhd.earlybirdapi.util.Mailer;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

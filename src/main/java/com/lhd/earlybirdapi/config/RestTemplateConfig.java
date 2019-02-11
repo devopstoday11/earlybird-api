@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.config;
+package com.lhd.earlybirdapi.config;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;

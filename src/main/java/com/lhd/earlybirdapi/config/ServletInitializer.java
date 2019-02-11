@@ -1,6 +1,6 @@
-package com.lhd.broadcastapi.config;
+package com.lhd.earlybirdapi.config;
 
-import com.lhd.broadcastapi.BroadcastApplication;
+import com.lhd.earlybirdapi.BroadcastApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
