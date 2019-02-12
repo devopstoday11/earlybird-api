@@ -12,55 +12,20 @@ class ScheduledEmailer {
   private static final int TEN_SECONDS = 10000;
   private static final int ONE_MINUTE = 60000;
 
-  private Mailer mailer;
   private GithubRepoService githubRepoService;
-  private GithubRepoRepository githubRepoRepository;
-  private SubscriptionRepository subscriptionRepository;
+  private SubscriptionService subscriptionService;
 
   private ScheduledEmailer(
-      Mailer mailer,
       GithubRepoService githubRepoService,
-      GithubRepoRepository githubRepoRepository,
-      SubscriptionRepository subscriptionRepository) {
-    this.mailer = mailer;
+      SubscriptionService subscriptionService) {
     this.githubRepoService = githubRepoService;
-    this.githubRepoRepository = githubRepoRepository;
-    this.subscriptionRepository = subscriptionRepository;
+    this.subscriptionService = subscriptionService;
   }
 
   @Scheduled(fixedDelay = TEN_SECONDS)
   void sendEmailNotificationsForNewIssues() {
-    updateAllGithubReposLatestIssueTimestampsAndUrls();
-    Instant newLastCheckedTimestamp = Instant.now();
-    for (Subscription subscription : subscriptionRepository.findAll()) {
-      sendEmailIfNewIssueExists(subscription);
-      updateLastCheckedTimestampAndSave(newLastCheckedTimestamp, subscription);
-    }
-  }
-
-  private void updateAllGithubReposLatestIssueTimestampsAndUrls() {
-    List<GithubRepo> githubRepos = githubRepoRepository.findAll();
-    for (GithubRepo githubRepo : githubRepos) {
-      IssueDto latestIssue = githubRepoService.findLatestIssue(githubRepo.getId());
-      githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreatedAt()));
-      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
-    }
-    githubRepoRepository.saveAll(githubRepos);
-  }
-
-  private void sendEmailIfNewIssueExists(Subscription subscription) {
-    Instant lastCheckedTimestamp = subscription.getLastCheckedTimestamp();
-    GithubRepo githubRepo = subscription.getGithubRepo();
-    Instant latestIssueTimestamp = githubRepo.getLatestRecordedIssueTimestamp();
-    if (latestIssueTimestamp.isAfter(lastCheckedTimestamp)) {
-      mailer.send(subscription.getEmail(), "A new issue has been opened on a project you're "
-          + "interested in. Find it here: " + githubRepo.getLatestRecordedIssueUrl());
-    }
-  }
-
-  private void updateLastCheckedTimestampAndSave(Instant newLastCheckedTimestamp, Subscription subscription) {
-    subscription.setLastCheckedTimestamp(newLastCheckedTimestamp);
-    subscriptionRepository.save(subscription);
+    githubRepoService.updateAllGithubReposLatestIssueTimestampsAndUrls();
+    subscriptionService.sendEmailsForSubscriptionsWithNewIssues();
   }
 
 }

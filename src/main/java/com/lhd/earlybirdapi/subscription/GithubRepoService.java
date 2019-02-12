@@ -24,6 +24,16 @@ class GithubRepoService {
     this.githubRepoRepository = githubRepoRepository;
   }
 
+  void updateAllGithubReposLatestIssueTimestampsAndUrls() {
+    List<GithubRepo> githubRepos = githubRepoRepository.findAll();
+    for (GithubRepo githubRepo : githubRepos) {
+      IssueDto latestIssue = findLatestIssue(githubRepo.getId());
+      githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreatedAt()));
+      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
+    }
+    githubRepoRepository.saveAll(githubRepos);
+  }
+
   GithubRepo findGithubRepo(SubscriptionRequestDto subscriptionRequest) {
     String githubRepoId = subscriptionRequest.getRepoOwner() + "/" + subscriptionRequest.getRepoName();
     Optional<GithubRepo> optionalRepo = githubRepoRepository.findById(githubRepoId);

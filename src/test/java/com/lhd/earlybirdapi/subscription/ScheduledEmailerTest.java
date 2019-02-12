@@ -53,6 +53,9 @@ public class ScheduledEmailerTest {
   @Mock
   private SubscriptionRepository subscriptionRepositoryMock;
 
+  @Mock
+  private SubscriptionService subscriptionServiceMock;
+
   @InjectMocks
   private ScheduledEmailer scheduledEmailerMock;
 
@@ -140,7 +143,7 @@ public class ScheduledEmailerTest {
 
   private void verifyEmailSentOnlyForSubscription1() {
     verify(subscriptionRepositoryMock, times(1)).findAll();
-    verify(mailerMock, times(1)).send("generic1@email.com",
+    verify(mailerMock, times(1)).createAndSendMessage("generic1@email.com",
         "A new issue has been opened on a project you're interested in. "
             + "Find it here: http://github.com/user/repo/issue1");
   }

@@ -49,4 +49,9 @@ class Subscription {
     this.lastCheckedTimestamp = lastCheckedTimestamp;
   }
 
+  boolean newIssueExists() {
+    Instant latestIssueTimestamp = githubRepo.getLatestRecordedIssueTimestamp();
+    return latestIssueTimestamp.isAfter(lastCheckedTimestamp);
+  }
+
 }
