@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class SubscriptionController {
 
-  private Mailer mailer = new Mailer();
   private SubscriptionService subscriptionService;
 
   SubscriptionController(SubscriptionService subscriptionService) {

@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-public class BroadcastApplication {
+public class EarlyBirdApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(BroadcastApplication.class, args);
+    SpringApplication.run(EarlyBirdApplication.class, args);
   }
 
 }
