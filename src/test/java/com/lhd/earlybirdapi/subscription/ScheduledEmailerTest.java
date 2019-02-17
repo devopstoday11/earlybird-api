@@ -14,6 +14,7 @@ import com.lhd.earlybirdapi.githubrepo.GithubRepoRepository;
 import com.lhd.earlybirdapi.githubrepo.GithubRepoService;
 import com.lhd.earlybirdapi.githubrepo.IssueDto;
 import com.lhd.earlybirdapi.util.Mailer;
+import com.lhd.earlybirdapi.util.ScheduledEmailer;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

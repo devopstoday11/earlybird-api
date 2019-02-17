@@ -1,6 +1,7 @@
-package com.lhd.earlybirdapi.subscription;
+package com.lhd.earlybirdapi.util;
 
 import com.lhd.earlybirdapi.githubrepo.GithubRepoService;
+import com.lhd.earlybirdapi.subscription.SubscriptionService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 

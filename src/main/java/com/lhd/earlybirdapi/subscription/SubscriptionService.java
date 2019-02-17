@@ -23,17 +23,7 @@ public class SubscriptionService {
     this.mailer = mailer;
   }
 
-  void saveSubscription(SubscriptionRequestDto subscriptionRequest) {
-    GithubRepo githubRepo = githubRepoService.findGithubRepo(subscriptionRequest);
-    Subscription subscription = Subscription.builder()
-        .email(subscriptionRequest.getEmail())
-        .githubRepo(githubRepo)
-        .lastCheckedTimestamp(Instant.now())
-        .build();
-    subscriptionRepository.save(subscription);
-  }
-
-  void sendEmailsForSubscriptionsWithNewIssues() {
+  public void sendEmailsForSubscriptionsWithNewIssues() {
     for (Subscription subscription : subscriptionRepository.findAll()) {
       Instant newLastCheckedTimestamp = Instant.now();
       if (subscription.newIssueExists()) {
@@ -46,6 +36,16 @@ public class SubscriptionService {
 
   private void updateLastCheckedTimestampAndSave(Instant newLastCheckedTimestamp, Subscription subscription) {
     subscription.setLastCheckedTimestamp(newLastCheckedTimestamp);
+    subscriptionRepository.save(subscription);
+  }
+
+  void saveSubscription(SubscriptionRequestDto subscriptionRequest) {
+    GithubRepo githubRepo = githubRepoService.findGithubRepo(subscriptionRequest);
+    Subscription subscription = Subscription.builder()
+        .email(subscriptionRequest.getEmail())
+        .githubRepo(githubRepo)
+        .lastCheckedTimestamp(Instant.now())
+        .build();
     subscriptionRepository.save(subscription);
   }
 

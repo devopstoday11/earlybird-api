@@ -1,7 +1,6 @@
 package com.lhd.earlybirdapi.githubrepo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lhd.earlybirdapi.subscription.IssueDto;
 import com.lhd.earlybirdapi.subscription.SubscriptionRequestDto;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,9 +29,11 @@ public class GithubRepoService {
     List<GithubRepo> githubRepos = githubRepoRepository.findAll();
     for (GithubRepo githubRepo : githubRepos) {
       Optional<IssueDto> optionalIssueDto = findLatestIssue(githubRepo.getId());
-      IssueDto latestIssue = findLatestIssue(githubRepo.getId());
-      githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreatedAt()));
-      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
+      if (optionalIssueDto.isPresent()) {
+        IssueDto latestIssue = optionalIssueDto.get();
+        githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreatedAt()));
+        githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
+      }
     }
     githubRepoRepository.saveAll(githubRepos);
   }
@@ -72,13 +73,35 @@ public class GithubRepoService {
     }
   }
 
-  Optional<IssueDto> findLatestIssue(String githubRepoId) {
-    // TODO: this thing needs a lot of work
+  private Optional<IssueDto> findLatestIssue(String githubRepoId) {
     IssueDto[] issues = postForGithubRepoIssues(githubRepoId);
     return Optional.of(issues[0]);
   }
 
-  private List<String> createCurlCommand(String githubRepoId) {
+  // TODO: debug why this request wouldn't work with RestTemplate or the like
+  // this really should be an http request, not a cURL executed with ProcessBuilder
+  private IssueDto[] postForGithubRepoIssues(String githubRepoId) {
+    IssueDto[] issues;
+
+    try {
+      Process curlRequestProcess = executeCurlRequestAndRetrieveProcess(githubRepoId);
+      BufferedReader bufferedReader = getBufferedReaderFromProcess(curlRequestProcess);
+      String serializedResponse = getSerializedResponse(bufferedReader);
+      issues = new ObjectMapper().readValue(serializedResponse, IssueDto[].class);
+    } catch (IOException e) {
+      throw new GithubApiRequestException(e.getMessage());
+    }
+
+    return issues;
+  }
+
+  private Process executeCurlRequestAndRetrieveProcess(String githubRepoId) throws IOException {
+    List<String> curlCommandAndArgs = createCurlCommandAndArgs(githubRepoId);
+    ProcessBuilder pb = new ProcessBuilder(curlCommandAndArgs);
+    return pb.start();
+  }
+
+  private List<String> createCurlCommandAndArgs(String githubRepoId) {
     List<String> commandAndArgs = new ArrayList<>();
     commandAndArgs.add("curl");
     addAuthTokenIfExistsTo(commandAndArgs);
@@ -93,37 +116,19 @@ public class GithubRepoService {
     }
   }
 
-  private IssueDto[] postForGithubRepoIssues(String githubRepoId) {
-    List<String> commandAndArgs = createCurlCommand(githubRepoId);
-    ProcessBuilder pb = new ProcessBuilder(commandAndArgs);
-    IssueDto[] issues;
-
-    try {
-      Process p = pb.start();
-
-      BufferedReader br = getBufferedReaderFromProcess(p);
-      StringBuilder response = new StringBuilder();
-
-      String line;
-      while ((line = br.readLine()) != null) {
-        response.append(line);
-      }
-      String s = response.toString();
-      System.out.println("RESPONSE: ");
-      System.out.println(s);
-
-      issues = new ObjectMapper().readValue(s, IssueDto[].class);
-    } catch (IOException e) {
-      // do something
-    }
-
-    return issues;
-  }
-
   private BufferedReader getBufferedReaderFromProcess(Process p) {
     InputStream is = p.getInputStream();
     InputStreamReader isr = new InputStreamReader(is);
     return new BufferedReader(isr);
+  }
+
+  private String getSerializedResponse(BufferedReader br) throws IOException {
+    StringBuilder response = new StringBuilder();
+    String line;
+    while ((line = br.readLine()) != null) {
+      response.append(line);
+    }
+    return response.toString();
   }
 
 }
