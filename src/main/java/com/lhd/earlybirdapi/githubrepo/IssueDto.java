@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-class IssueDto {
+public class IssueDto {
 
   @JsonProperty("created_at")
   private String createdAt;

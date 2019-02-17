@@ -74,7 +74,7 @@ public class GithubRepoService {
     }
   }
 
-  private Optional<IssueDto> findLatestIssue(String githubRepoId) {
+  Optional<IssueDto> findLatestIssue(String githubRepoId) {
     IssueDto[] issues = postForGithubRepoIssues(githubRepoId);
     return Optional.of(issues[0]);
   }

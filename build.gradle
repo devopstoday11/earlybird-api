@@ -68,7 +68,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: ['com/lhd/earlybirdapi/util/**',
+                    exclude: ['com/lhd/earlybirdapi/aspect/**',
                               'com/lhd/earlybirdapi/config/**',
                               'com/lhd/earlybirdapi/BroadcastApplication.class'])
         })
@@ -89,7 +89,7 @@ jacocoTestCoverageVerification {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: ['com/lhd/earlybirdapi/util/**',
+                    exclude: ['com/lhd/earlybirdapi/aspect/**',
                               'com/lhd/earlybirdapi/config/**',
                               'com/lhd/earlybirdapi/BroadcastApplication.class'])
         })

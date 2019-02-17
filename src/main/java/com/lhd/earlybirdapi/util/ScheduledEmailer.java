@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-class ScheduledEmailer {
+public class ScheduledEmailer {
 
   private static final int TEN_SECONDS = 10000;
   private static final int ONE_MINUTE = 60000;

@@ -3,7 +3,6 @@ package com.lhd.earlybirdapi.subscription;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,21 +13,19 @@ import com.lhd.earlybirdapi.githubrepo.GithubRepoRepository;
 import com.lhd.earlybirdapi.githubrepo.GithubRepoService;
 import com.lhd.earlybirdapi.githubrepo.IssueDto;
 import com.lhd.earlybirdapi.util.Mailer;
-import com.lhd.earlybirdapi.util.ScheduledEmailer;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScheduledEmailerTest {
+// TODO: NONE OF THIS IS FUNCTIONAL, i just moved this over from a previous test class because it's got logic that
+// can be reused
+public class SubscriptionServiceTest {
 
   private Instant currentTime = Instant.now();
   private Instant currentTimePlus5Seconds = currentTime.plusSeconds(5L);
@@ -58,18 +55,13 @@ public class ScheduledEmailerTest {
   @Mock
   private SubscriptionRepository subscriptionRepositoryMock;
 
-  @Mock
-  private SubscriptionService subscriptionServiceMock;
-
   @InjectMocks
-  private ScheduledEmailer scheduledEmailerMock;
+  private SubscriptionService subscriptionServiceMock;
 
 
   @Test
   public void sendEmailNotificationsForNewIssues() {
     createTestDoublesAndStubMockedServices();
-
-    scheduledEmailerMock.sendEmailNotificationsForNewIssues();
 
     assertGithubReposUpdatedWithLatestIssueUrlAndTimestampAndVerifySaved();
     verifyEmailSentOnlyForSubscription1();
@@ -123,8 +115,8 @@ public class ScheduledEmailerTest {
   }
 
   private void stubGithubRepoServiceMock() {
-    when(githubRepoServiceMock.findLatestIssue("genericRepoId1")).thenReturn(issueDto1);
-    when(githubRepoServiceMock.findLatestIssue("genericRepoId2")).thenReturn(issueDto2);
+//    when(githubRepoServiceMock.findLatestIssue("genericRepoId1")).thenReturn(issueDto1);
+//    when(githubRepoServiceMock.findLatestIssue("genericRepoId2")).thenReturn(issueDto2);
   }
 
   private void stubSubscriptionRepositoryMock() {
@@ -142,8 +134,8 @@ public class ScheduledEmailerTest {
     assertEquals("genericRepoId2", savedGithubRepos.get(1).getId());
     assertEquals(currentTimeMinus5Seconds, savedGithubRepos.get(1).getLatestRecordedIssueTimestamp());
     assertEquals("http://github.com/user/repo/issue2", savedGithubRepos.get(1).getLatestRecordedIssueUrl());
-    verify(githubRepoServiceMock, times(1)).findLatestIssue("genericRepoId1");
-    verify(githubRepoServiceMock, times(1)).findLatestIssue("genericRepoId2");
+//    verify(githubRepoServiceMock, times(1)).findLatestIssue("genericRepoId1");
+//    verify(githubRepoServiceMock, times(1)).findLatestIssue("genericRepoId2");
   }
 
   private void verifyEmailSentOnlyForSubscription1() {
