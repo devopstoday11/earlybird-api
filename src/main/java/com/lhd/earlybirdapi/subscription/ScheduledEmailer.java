@@ -1,8 +1,6 @@
 package com.lhd.earlybirdapi.subscription;
 
-import com.lhd.earlybirdapi.util.Mailer;
-import java.time.Instant;
-import java.util.List;
+import com.lhd.earlybirdapi.githubrepo.GithubRepoService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 

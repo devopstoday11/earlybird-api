@@ -9,6 +9,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.lhd.earlybirdapi.githubrepo.GithubRepo;
+import com.lhd.earlybirdapi.githubrepo.GithubRepoRepository;
+import com.lhd.earlybirdapi.githubrepo.GithubRepoService;
+import com.lhd.earlybirdapi.githubrepo.IssueDto;
 import com.lhd.earlybirdapi.util.Mailer;
 import java.time.Instant;
 import java.util.ArrayList;

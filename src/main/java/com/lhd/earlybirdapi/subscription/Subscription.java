@@ -1,5 +1,6 @@
 package com.lhd.earlybirdapi.subscription;
 
+import com.lhd.earlybirdapi.githubrepo.GithubRepo;
 import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;

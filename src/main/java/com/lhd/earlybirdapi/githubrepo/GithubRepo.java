@@ -1,4 +1,4 @@
-package com.lhd.earlybirdapi.subscription;
+package com.lhd.earlybirdapi.githubrepo;
 
 import java.time.Instant;
 import javax.persistence.Column;
@@ -16,7 +16,7 @@ import org.apache.commons.lang3.Validate;
 @Table(name = "github_repo")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-class GithubRepo {
+public class GithubRepo {
 
   @Id
   @Column(name = "id", updatable = false, nullable = false)
