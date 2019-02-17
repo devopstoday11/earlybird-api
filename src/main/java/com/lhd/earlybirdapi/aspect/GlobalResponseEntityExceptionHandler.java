@@ -9,8 +9,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+  // TODO: this is a sample, we'll need to add more of these methods for our app specific exceptions
   @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
   protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
     String bodyOfResponse = "This should be application specific";

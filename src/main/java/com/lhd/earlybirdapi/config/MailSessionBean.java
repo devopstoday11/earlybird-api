@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MailSessionConfig {
+public class MailSessionBean {
 
   private Properties gmailProperties;
 
-  public MailSessionConfig(Properties gmailProperties) {
+  public MailSessionBean(Properties gmailProperties) {
     this.gmailProperties = gmailProperties;
   }
 

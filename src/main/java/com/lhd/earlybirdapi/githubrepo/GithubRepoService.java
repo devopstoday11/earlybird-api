@@ -43,6 +43,7 @@ public class GithubRepoService {
     Optional<GithubRepo> optionalRepo = githubRepoRepository.findById(githubRepoId);
     GithubRepo githubRepo;
 
+    // existence here does NOT mean existence of the repository in Github
     if (optionalRepo.isPresent()) {
       githubRepo = optionalRepo.get();
     } else {
@@ -83,6 +84,8 @@ public class GithubRepoService {
   private IssueDto[] postForGithubRepoIssues(String githubRepoId) {
     IssueDto[] issues;
 
+    // TODO: each of the methods that could throw IOExceptions should handle it themselves
+    // we could remove the try/catch here in that case, and create more specific custom exceptions
     try {
       Process curlRequestProcess = executeCurlRequestAndRetrieveProcess(githubRepoId);
       BufferedReader bufferedReader = getBufferedReaderFromProcess(curlRequestProcess);

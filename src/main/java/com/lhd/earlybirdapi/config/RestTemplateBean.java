@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @Configuration
-public class RestTemplateConfig {
+public class RestTemplateBean {
 
   @Bean
   public RestTemplate restTemplate() {

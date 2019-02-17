@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GmailPropertiesConfig {
+public class GmailPropertiesBean {
 
   // TODO: create new gmail account named earlybirdnoreply
   @Value("${gmail.user}")

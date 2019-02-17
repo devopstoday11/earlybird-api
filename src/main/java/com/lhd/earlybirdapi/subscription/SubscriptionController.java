@@ -19,10 +19,10 @@ class SubscriptionController {
     this.subscriptionService = subscriptionService;
   }
 
+  // TODO: revisit cross origin. do we need this for deploying with AWS?
   @CrossOrigin(origins = "http://localhost:3000")
   @PutMapping(path = "/create-subscription", consumes = APPLICATION_JSON_VALUE)
   ResponseEntity<?> save(@RequestBody SubscriptionRequestDto subscriptionRequest) {
-    // TODO: handle exceptions from saveSubscription, createAndSendMessage appropriate HTTP response code
     subscriptionService.saveSubscription(subscriptionRequest);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
