@@ -28,14 +28,18 @@ public class GithubRepoService {
   public void updateAllGithubReposLatestIssueTimestampsAndUrls() {
     List<GithubRepo> githubRepos = githubRepoRepository.findAll();
     for (GithubRepo githubRepo : githubRepos) {
-      Optional<IssueDto> optionalIssueDto = findLatestIssue(githubRepo.getId());
-      if (optionalIssueDto.isPresent()) {
-        IssueDto latestIssue = optionalIssueDto.get();
-        githubRepo.setLatestRecordedIssueTimestamp(Instant.parse(latestIssue.getCreatedAt()));
-        githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
-      }
+      updateWithLatestIssue(githubRepo);
     }
     githubRepoRepository.saveAll(githubRepos);
+  }
+
+  private void updateWithLatestIssue(GithubRepo githubRepo) {
+    Optional<IssueDto> optionalIssueDto = findLatestIssue(githubRepo.getId());
+    if (optionalIssueDto.isPresent()) {
+      IssueDto latestIssue = optionalIssueDto.get();
+      githubRepo.setLatestRecordedIssueTimestamp(latestIssue.getCreatedAt());
+      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
+    }
   }
 
   public GithubRepo findGithubRepo(SubscriptionRequestDto subscriptionRequest) {
@@ -67,8 +71,7 @@ public class GithubRepoService {
     Optional<IssueDto> optionalIssueDto = findLatestIssue(githubRepoId);
     if (optionalIssueDto.isPresent()) {
       IssueDto latestIssueDto = optionalIssueDto.get();
-      String latestIssueCreatedAtTimestampString = latestIssueDto.getCreatedAt();
-      return Instant.parse(latestIssueCreatedAtTimestampString);
+      return latestIssueDto.getCreatedAt();
     } else {
       return Instant.EPOCH;
     }

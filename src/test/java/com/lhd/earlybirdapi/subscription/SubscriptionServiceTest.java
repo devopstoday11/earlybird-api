@@ -79,10 +79,10 @@ public class SubscriptionServiceTest {
 
   private void createIssueDtos() {
     issueDto1 = new IssueDto();
-    issueDto1.setCreatedAt(currentTimePlus5Seconds.toString());
+    issueDto1.setCreatedAt(currentTimePlus5Seconds);
     issueDto1.setHtmlUrl("http://github.com/user/repo/issue1");
     issueDto2 = new IssueDto();
-    issueDto2.setCreatedAt(currentTimeMinus5Seconds.toString());
+    issueDto2.setCreatedAt(currentTimeMinus5Seconds);
     issueDto2.setHtmlUrl("http://github.com/user/repo/issue2");
   }
 
