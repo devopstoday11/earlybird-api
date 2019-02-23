@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.web.client.RestTemplate;
 
 // TODO: NONE OF THIS IS FUNCTIONAL, i just moved this over from a previous test class because it's got logic that
 // can be reused
@@ -45,6 +44,9 @@ public class SubscriptionServiceTest {
 
   @Mock
   private GithubRepoRepository githubRepoRepositoryMock;
+
+  @Mock
+  private GithubRepoService githubRepoServiceMock;
 
   @Captor
   ArgumentCaptor<Subscription> savedSubscriptionsCaptor;

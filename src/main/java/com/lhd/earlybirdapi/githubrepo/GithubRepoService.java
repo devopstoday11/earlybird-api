@@ -2,7 +2,7 @@ package com.lhd.earlybirdapi.githubrepo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhd.earlybirdapi.subscription.SubscriptionRequestDto;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
