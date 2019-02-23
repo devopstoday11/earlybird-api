@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.config;
+package com.lhd.earlybirdapi.config;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @Configuration
-public class RestTemplateConfig {
+public class RestTemplateBean {
 
   @Bean
   public RestTemplate restTemplate() {
