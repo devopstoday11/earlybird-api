@@ -2,16 +2,6 @@ package com.lhd.earlybirdapi.githubrepo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhd.earlybirdapi.subscription.SubscriptionRequestDto;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+
 @Service
-@Slf4j
 public class GithubRepoService {
 
   @Value("${oauth.token}")
@@ -28,11 +22,11 @@ public class GithubRepoService {
 
   private GithubRepoRepository githubRepoRepository;
 
-  @Autowired
   private RestTemplate restTemplate;
 
-  public GithubRepoService(GithubRepoRepository githubRepoRepository) {
+  public GithubRepoService(GithubRepoRepository githubRepoRepository, RestTemplate restTemplate) {
     this.githubRepoRepository = githubRepoRepository;
+    this.restTemplate = restTemplate;
   }
 
   public void updateAllGithubReposLatestIssueTimestampsAndUrls() {
