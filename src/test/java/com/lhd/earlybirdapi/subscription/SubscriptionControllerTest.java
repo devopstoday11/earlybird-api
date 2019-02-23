@@ -1,6 +1,7 @@
 package com.lhd.earlybirdapi.subscription;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ public class SubscriptionControllerTest {
   @Test
   public void save() {
     SubscriptionRequestDto subscriptionRequestDto = new SubscriptionRequestDto();
+    when(subscriptionServiceMock.saveSubscription(subscriptionRequestDto)).thenReturn(true);
 
     ResponseEntity<?> responseEntity = subscriptionController.save(subscriptionRequestDto);
 

@@ -22,8 +22,12 @@ class SubscriptionController {
   @CrossOrigin(origins = "http://localhost:3000")
   @PutMapping(path = "/create-subscription", consumes = APPLICATION_JSON_VALUE)
   ResponseEntity<?> save(@RequestBody SubscriptionRequestDto subscriptionRequest) {
-    subscriptionService.saveSubscription(subscriptionRequest);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    if(subscriptionService.saveSubscription(subscriptionRequest)) {
+      return new ResponseEntity<>(HttpStatus.CREATED);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
   }
 
 }

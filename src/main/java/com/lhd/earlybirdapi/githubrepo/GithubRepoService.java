@@ -6,6 +6,7 @@ import com.lhd.earlybirdapi.subscription.SubscriptionRequestDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -48,6 +49,7 @@ public class GithubRepoService {
 
   public GithubRepo findGithubRepo(SubscriptionRequestDto subscriptionRequest) {
     String githubRepoId = subscriptionRequest.getRepoOwner() + "/" + subscriptionRequest.getRepoName();
+
     Optional<GithubRepo> optionalRepo = githubRepoRepository.findById(githubRepoId);
     GithubRepo githubRepo;
 
@@ -55,7 +57,11 @@ public class GithubRepoService {
     if (optionalRepo.isPresent()) {
       githubRepo = optionalRepo.get();
     } else {
-      githubRepo = createAndSaveNewGithubRepo(githubRepoId);
+      if(githubRepoExistsInApi(githubRepoId)) {
+        githubRepo = createAndSaveNewGithubRepo(githubRepoId);
+      } else {
+        githubRepo = null;
+      }
     }
 
     return githubRepo;
@@ -100,6 +106,16 @@ public class GithubRepoService {
     }
 
     return issues;
+  }
+  private boolean githubRepoExistsInApi(String githubRepoId) {
+    String URL = "/repos/" + githubRepoId;
+    ResponseEntity<String> responseEntity;
+    try {
+      responseEntity = restTemplate.getForEntity(URL, String.class);
+    } catch (HttpClientErrorException e) {
+      return false;
+    }
+    return responseEntity.getStatusCode().is2xxSuccessful();
   }
 
 }

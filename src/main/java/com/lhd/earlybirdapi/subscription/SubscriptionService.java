@@ -39,14 +39,18 @@ public class SubscriptionService {
     subscriptionRepository.save(subscription);
   }
 
-  void saveSubscription(SubscriptionRequestDto subscriptionRequest) {
+  boolean saveSubscription(SubscriptionRequestDto subscriptionRequest) {
     GithubRepo githubRepo = githubRepoService.findGithubRepo(subscriptionRequest);
-    Subscription subscription = Subscription.builder()
-        .email(subscriptionRequest.getEmail())
-        .githubRepo(githubRepo)
-        .lastCheckedTimestamp(Instant.now())
-        .build();
-    subscriptionRepository.save(subscription);
+    if(githubRepo != null) {
+      Subscription subscription = Subscription.builder()
+              .email(subscriptionRequest.getEmail())
+              .githubRepo(githubRepo)
+              .lastCheckedTimestamp(Instant.now())
+              .build();
+      subscriptionRepository.save(subscription);
+      return true;
+    }
+    return false;
   }
 
 }
