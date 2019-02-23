@@ -15,7 +15,7 @@ public class RestTemplateBean {
   @Bean
   public RestTemplate restTemplate() {
     RestTemplate restTemplate = new RestTemplate();
-    restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://api.github.com"));
+    restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("https://api.github.com"));
     HttpClient httpClient = HttpClientBuilder.create()
         .setRetryHandler(new DefaultHttpRequestRetryHandler(3, true))
         .build();

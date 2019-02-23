@@ -10,16 +10,26 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class GithubRepoService {
 
   @Value("${oauth.token}")
   private String authToken;
 
   private GithubRepoRepository githubRepoRepository;
+
+  @Autowired
+  private RestTemplate restTemplate;
 
   public GithubRepoService(GithubRepoRepository githubRepoRepository) {
     this.githubRepoRepository = githubRepoRepository;
@@ -82,59 +92,20 @@ public class GithubRepoService {
     return Optional.of(issues[0]);
   }
 
-  // TODO: debug why this request wouldn't work with RestTemplate or the like
-  // this really should be an http request, not a cURL executed with ProcessBuilder
   private IssueDto[] postForGithubRepoIssues(String githubRepoId) {
+    String URL = "/repos/" + githubRepoId + "/issues";
     IssueDto[] issues;
 
     // TODO: each of the methods that could throw IOExceptions should handle it themselves
     // we could remove the try/catch here in that case, and create more specific custom exceptions
     try {
-      Process curlRequestProcess = executeCurlRequestAndRetrieveProcess(githubRepoId);
-      BufferedReader bufferedReader = getBufferedReaderFromProcess(curlRequestProcess);
-      String serializedResponse = getSerializedResponse(bufferedReader);
-      issues = new ObjectMapper().readValue(serializedResponse, IssueDto[].class);
-    } catch (IOException e) {
+      ResponseEntity<String> responseEntity = restTemplate.getForEntity(URL, String.class);
+      issues = new ObjectMapper().readValue(responseEntity.getBody(), IssueDto[].class);
+    } catch (IOException | RestClientException e) {
       throw new GithubApiRequestException(e.getMessage());
     }
 
     return issues;
-  }
-
-  private Process executeCurlRequestAndRetrieveProcess(String githubRepoId) throws IOException {
-    List<String> curlCommandAndArgs = createCurlCommandAndArgs(githubRepoId);
-    ProcessBuilder pb = new ProcessBuilder(curlCommandAndArgs);
-    return pb.start();
-  }
-
-  private List<String> createCurlCommandAndArgs(String githubRepoId) {
-    List<String> commandAndArgs = new ArrayList<>();
-    commandAndArgs.add("curl");
-    addAuthTokenIfExistsTo(commandAndArgs);
-    commandAndArgs.add("https://api.github.com/repos/" + githubRepoId + "/issues");
-    return commandAndArgs;
-  }
-
-  private void addAuthTokenIfExistsTo(List<String> commandAndArgs) {
-    if (!authToken.equals("${oauth.token}")) {
-      commandAndArgs.add("-H");
-      commandAndArgs.add("Authorization: token " + authToken);
-    }
-  }
-
-  private BufferedReader getBufferedReaderFromProcess(Process p) {
-    InputStream is = p.getInputStream();
-    InputStreamReader isr = new InputStreamReader(is);
-    return new BufferedReader(isr);
-  }
-
-  private String getSerializedResponse(BufferedReader br) throws IOException {
-    StringBuilder response = new StringBuilder();
-    String line;
-    while ((line = br.readLine()) != null) {
-      response.append(line);
-    }
-    return response.toString();
   }
 
 }
