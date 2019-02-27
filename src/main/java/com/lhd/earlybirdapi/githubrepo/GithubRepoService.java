@@ -99,9 +99,10 @@ public class GithubRepoService {
     // TODO: each of the methods that could throw IOExceptions should handle it themselves
     // we could remove the try/catch here in that case, and create more specific custom exceptions
     try {
-      ResponseEntity<String> responseEntity = restTemplate.getForEntity(URL, String.class);
-      issues = new ObjectMapper().readValue(responseEntity.getBody(), IssueDto[].class);
-    } catch (IOException | RestClientException e) {
+      ResponseEntity<IssueDto[]> responseEntity = restTemplate.getForEntity(URL, IssueDto[].class);
+      issues = responseEntity.getBody();
+
+    } catch (RestClientException e) {
       throw new GithubApiRequestException(e.getMessage());
     }
 
