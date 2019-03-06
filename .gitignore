@@ -2,3 +2,10 @@
 build
 out
 .idea
+*.class
+bin/
+src/.project
+src/.settings
+.classpath
+.project
+.settings/

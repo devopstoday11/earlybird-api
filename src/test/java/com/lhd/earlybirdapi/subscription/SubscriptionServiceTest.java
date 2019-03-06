@@ -17,14 +17,13 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InOrder;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
 
 // TODO: NONE OF THIS IS FUNCTIONAL, i just moved this over from a previous test class because it's got logic that
 // can be reused
+@RunWith(MockitoJUnitRunner.class)
 public class SubscriptionServiceTest {
 
   private Instant currentTime = Instant.now();
@@ -40,14 +39,14 @@ public class SubscriptionServiceTest {
   @Mock
   private Mailer mailerMock;
 
-  @Mock
-  private GithubRepoService githubRepoServiceMock;
-
   @Captor
   ArgumentCaptor<List<GithubRepo>> savedGithubReposCaptor;
 
   @Mock
   private GithubRepoRepository githubRepoRepositoryMock;
+
+  @Mock
+  private GithubRepoService githubRepoServiceMock;
 
   @Captor
   ArgumentCaptor<Subscription> savedSubscriptionsCaptor;
@@ -56,25 +55,25 @@ public class SubscriptionServiceTest {
   private SubscriptionRepository subscriptionRepositoryMock;
 
   @InjectMocks
-  private SubscriptionService subscriptionServiceMock;
+  private SubscriptionService subscriptionService;
 
 
   @Test
   public void sendEmailNotificationsForNewIssues() {
     createTestDoublesAndStubMockedServices();
 
-    assertGithubReposUpdatedWithLatestIssueUrlAndTimestampAndVerifySaved();
-    verifyEmailSentOnlyForSubscription1();
-    assertSubscriptionsUpdatedAndVerifySaved();
+    //assertGithubReposUpdatedWithLatestIssueUrlAndTimestampAndVerifySaved();
+    //verifyEmailSentOnlyForSubscription1();
+    //assertSubscriptionsUpdatedAndVerifySaved();
   }
 
   private void createTestDoublesAndStubMockedServices() {
-    createIssueDtos();
-    createGithubRepos();
-    createSubscriptions();
-    stubGithubRepoRepositoryMock();
-    stubGithubRepoServiceMock();
-    stubSubscriptionRepositoryMock();
+//    createIssueDtos();
+//    createGithubRepos();
+//    createSubscriptions();
+//    stubGithubRepoRepositoryMock();
+//    stubGithubRepoServiceMock();
+//    stubSubscriptionRepositoryMock();
   }
 
   private void createIssueDtos() {
@@ -111,7 +110,8 @@ public class SubscriptionServiceTest {
   }
 
   private void stubGithubRepoRepositoryMock() {
-    when(githubRepoRepositoryMock.findAll()).thenReturn(new ArrayList<>(asList(githubRepo1, githubRepo2)));
+    when(githubRepoRepositoryMock.findAll())
+            .thenReturn(new ArrayList<>(asList(githubRepo1, githubRepo2)));
   }
 
   private void stubGithubRepoServiceMock() {
