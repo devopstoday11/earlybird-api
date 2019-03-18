@@ -1,8 +1,6 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.subscription;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,17 +14,17 @@ import org.springframework.http.ResponseEntity;
 public class SubscriptionControllerTest {
 
   @Mock
-  private SubscriptionRepository subscriptionRepositoryMock;
+  private SubscriptionService subscriptionServiceMock;
 
   @InjectMocks
-  private SubscriptionController subscriptionControllerMock;
+  private SubscriptionController subscriptionController;
 
 
   @Test
   public void save() {
     SubscriptionRequestDto subscriptionRequestDto = new SubscriptionRequestDto();
 
-    ResponseEntity<?> responseEntity = subscriptionControllerMock.save(subscriptionRequestDto);
+    ResponseEntity<?> responseEntity = subscriptionController.save(subscriptionRequestDto);
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
   }

@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.githubrepo;
 
 import java.time.Instant;
 import javax.persistence.Column;
@@ -16,7 +16,7 @@ import org.apache.commons.lang3.Validate;
 @Table(name = "github_repo")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-class GithubRepo {
+public class GithubRepo {
 
   @Id
   @Column(name = "id", updatable = false, nullable = false)
@@ -24,19 +24,19 @@ class GithubRepo {
 
   @Column(name = "latest_issue_timestamp", nullable = false)
   @Setter
-  private Instant latestIssueTimestamp;
+  private Instant latestRecordedIssueTimestamp;
 
   @Column(name = "latest_issue_url")
   @Setter
-  private String latestIssueUrl;
+  private String latestRecordedIssueUrl;
 
   @Builder
-  private GithubRepo(String id, Instant latestIssueTimestamp) {
+  private GithubRepo(String id, Instant latestRecordedIssueTimestamp) {
     Validate.notEmpty(id);
-    Validate.notNull(latestIssueTimestamp);
+    Validate.notNull(latestRecordedIssueTimestamp);
 
     this.id = id;
-    this.latestIssueTimestamp = latestIssueTimestamp;
+    this.latestRecordedIssueTimestamp = latestRecordedIssueTimestamp;
   }
 
 }

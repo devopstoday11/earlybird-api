@@ -1,5 +1,6 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.subscription;
 
+import com.lhd.earlybirdapi.githubrepo.GithubRepo;
 import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,6 +48,11 @@ class Subscription {
     this.email = email;
     this.githubRepo = githubRepo;
     this.lastCheckedTimestamp = lastCheckedTimestamp;
+  }
+
+  boolean newIssueExists() {
+    Instant latestIssueTimestamp = githubRepo.getLatestRecordedIssueTimestamp();
+    return latestIssueTimestamp.isAfter(lastCheckedTimestamp);
   }
 
 }

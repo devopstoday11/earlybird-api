@@ -1,4 +1,11 @@
 .gradle
 build
 out
-.idea/
+.idea
+*.class
+bin/
+src/.project
+src/.settings
+.classpath
+.project
+.settings/

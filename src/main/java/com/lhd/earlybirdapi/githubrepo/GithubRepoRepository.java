@@ -1,4 +1,4 @@
-package com.lhd.broadcastapi.subscription;
+package com.lhd.earlybirdapi.githubrepo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
