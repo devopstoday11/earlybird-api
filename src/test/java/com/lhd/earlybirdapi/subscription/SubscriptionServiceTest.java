@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 // TODO: NONE OF THIS IS FUNCTIONAL, i just moved this over from a previous test class because it's got logic that
@@ -57,23 +61,34 @@ public class SubscriptionServiceTest {
   @InjectMocks
   private SubscriptionService subscriptionService;
 
+//  public void sendEmailsForSubscriptionsWithNewIssues() {
+//    for (Subscription subscription : subscriptionRepository.findAll()) {
+//      Instant newLastCheckedTimestamp = Instant.now();
+//      if (subscription.newIssueExists()) {
+//        mailer.createAndSendMessage(subscription.getEmail(), "A new issue has been opened on a project you're "
+//            + "interested in. Find it here: " + subscription.getGithubRepo().getLatestRecordedIssueUrl());
+//      }
+//      updateLastCheckedTimestampAndSave(newLastCheckedTimestamp, subscription);
+//    }
+//  }
 
   @Test
   public void sendEmailNotificationsForNewIssues() {
     createTestDoublesAndStubMockedServices();
 
-    //assertGithubReposUpdatedWithLatestIssueUrlAndTimestampAndVerifySaved();
-    //verifyEmailSentOnlyForSubscription1();
-    //assertSubscriptionsUpdatedAndVerifySaved();
+    subscriptionService.sendEmailsForSubscriptionsWithNewIssues();
+
+    verifyEmailSentOnlyForSubscription1();
+    assertSubscriptionsUpdatedAndVerifySaved();
   }
 
   private void createTestDoublesAndStubMockedServices() {
-//    createIssueDtos();
-//    createGithubRepos();
-//    createSubscriptions();
+    createIssueDtos();
+    createGithubRepos();
+    createSubscriptions();
 //    stubGithubRepoRepositoryMock();
 //    stubGithubRepoServiceMock();
-//    stubSubscriptionRepositoryMock();
+    stubSubscriptionRepositoryMock();
   }
 
   private void createIssueDtos() {
@@ -111,7 +126,7 @@ public class SubscriptionServiceTest {
 
   private void stubGithubRepoRepositoryMock() {
     when(githubRepoRepositoryMock.findAll())
-            .thenReturn(new ArrayList<>(asList(githubRepo1, githubRepo2)));
+        .thenReturn(new ArrayList<>(asList(githubRepo1, githubRepo2)));
   }
 
   private void stubGithubRepoServiceMock() {

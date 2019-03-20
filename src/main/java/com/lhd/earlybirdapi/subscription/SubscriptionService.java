@@ -4,7 +4,6 @@ import com.lhd.earlybirdapi.githubrepo.GithubRepo;
 import com.lhd.earlybirdapi.githubrepo.GithubRepoService;
 import com.lhd.earlybirdapi.util.Mailer;
 import java.time.Instant;
-
 import org.springframework.stereotype.Service;
 
 @Service

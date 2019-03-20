@@ -1,16 +1,14 @@
 package com.lhd.earlybirdapi.githubrepo;
 
 import com.lhd.earlybirdapi.subscription.SubscriptionRequestDto;
-
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GithubRepoService {
@@ -85,13 +83,13 @@ public class GithubRepoService {
   }
 
   private IssueDto[] postForGithubRepoIssues(String githubRepoId) {
-    String URL = "/repos/" + githubRepoId + "/issues";
+    String url = "/repos/" + githubRepoId + "/issues";
     IssueDto[] issues;
 
     // TODO: each of the methods that could throw IOExceptions should handle it themselves
     // we could remove the try/catch here in that case, and create more specific custom exceptions
     try {
-      ResponseEntity<IssueDto[]> responseEntity = restTemplate.getForEntity(URL, IssueDto[].class);
+      ResponseEntity<IssueDto[]> responseEntity = restTemplate.getForEntity(url, IssueDto[].class);
       issues = responseEntity.getBody();
     } catch (RestClientException e) {
       throw new GithubApiRequestException(e.getMessage());
