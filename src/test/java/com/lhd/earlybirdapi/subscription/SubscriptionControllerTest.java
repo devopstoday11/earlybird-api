@@ -1,6 +1,8 @@
 package com.lhd.earlybirdapi.subscription;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,7 @@ public class SubscriptionControllerTest {
 
     ResponseEntity<?> responseEntity = subscriptionController.save(subscriptionRequestDto);
 
+    verify(subscriptionServiceMock, times(1)).saveSubscription(subscriptionRequestDto);
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
   }
 
