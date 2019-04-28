@@ -25,8 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-// TODO: NONE OF THIS IS FUNCTIONAL, i just moved this over from a previous test class because it's got logic that
-// can be reused
 @RunWith(MockitoJUnitRunner.class)
 public class SubscriptionServiceTest {
 
@@ -44,15 +42,6 @@ public class SubscriptionServiceTest {
   private Mailer mailerMock;
 
   @Captor
-  ArgumentCaptor<List<GithubRepo>> savedGithubReposCaptor;
-
-  @Mock
-  private GithubRepoRepository githubRepoRepositoryMock;
-
-  @Mock
-  private GithubRepoService githubRepoServiceMock;
-
-  @Captor
   ArgumentCaptor<Subscription> savedSubscriptionsCaptor;
 
   @Mock
@@ -61,16 +50,6 @@ public class SubscriptionServiceTest {
   @InjectMocks
   private SubscriptionService subscriptionService;
 
-//  public void sendEmailsForSubscriptionsWithNewIssues() {
-//    for (Subscription subscription : subscriptionRepository.findAll()) {
-//      Instant newLastCheckedTimestamp = Instant.now();
-//      if (subscription.newIssueExists()) {
-//        mailer.createAndSendMessage(subscription.getEmail(), "A new issue has been opened on a project you're "
-//            + "interested in. Find it here: " + subscription.getGithubRepo().getLatestRecordedIssueUrl());
-//      }
-//      updateLastCheckedTimestampAndSave(newLastCheckedTimestamp, subscription);
-//    }
-//  }
 
   @Test
   public void sendEmailNotificationsForNewIssues() {
@@ -86,8 +65,6 @@ public class SubscriptionServiceTest {
     createIssueDtos();
     createGithubRepos();
     createSubscriptions();
-//    stubGithubRepoRepositoryMock();
-//    stubGithubRepoServiceMock();
     stubSubscriptionRepositoryMock();
   }
 
@@ -103,12 +80,14 @@ public class SubscriptionServiceTest {
   private void createGithubRepos() {
     githubRepo1 = GithubRepo.builder()
         .id("genericRepoId1")
-        .latestRecordedIssueTimestamp(currentTime)
+        .latestRecordedIssueTimestamp(issueDto1.getCreatedAt())
         .build();
+    githubRepo1.setLatestRecordedIssueUrl("http://github.com/user/repo/issue1");
     githubRepo2 = GithubRepo.builder()
         .id("genericRepoId2")
-        .latestRecordedIssueTimestamp(currentTime)
+        .latestRecordedIssueTimestamp(issueDto2.getCreatedAt())
         .build();
+    githubRepo2.setLatestRecordedIssueUrl("http://github.com/user/repo/issue2");
   }
 
   private void createSubscriptions() {
@@ -124,33 +103,8 @@ public class SubscriptionServiceTest {
         .build();
   }
 
-  private void stubGithubRepoRepositoryMock() {
-    when(githubRepoRepositoryMock.findAll())
-        .thenReturn(new ArrayList<>(asList(githubRepo1, githubRepo2)));
-  }
-
-  private void stubGithubRepoServiceMock() {
-//    when(githubRepoServiceMock.findLatestIssue("genericRepoId1")).thenReturn(issueDto1);
-//    when(githubRepoServiceMock.findLatestIssue("genericRepoId2")).thenReturn(issueDto2);
-  }
-
   private void stubSubscriptionRepositoryMock() {
     when(subscriptionRepositoryMock.findAll()).thenReturn(asList(subscription1, subscription2));
-  }
-
-  private void assertGithubReposUpdatedWithLatestIssueUrlAndTimestampAndVerifySaved() {
-    InOrder inOrder = inOrder(githubRepoRepositoryMock);
-    inOrder.verify(githubRepoRepositoryMock, times(1)).findAll();
-    inOrder.verify(githubRepoRepositoryMock, times(1)).saveAll(savedGithubReposCaptor.capture());
-    List<GithubRepo> savedGithubRepos = savedGithubReposCaptor.getValue();
-    assertEquals("genericRepoId1", savedGithubRepos.get(0).getId());
-    assertEquals(currentTimePlus5Seconds, savedGithubRepos.get(0).getLatestRecordedIssueTimestamp());
-    assertEquals("http://github.com/user/repo/issue1", savedGithubRepos.get(0).getLatestRecordedIssueUrl());
-    assertEquals("genericRepoId2", savedGithubRepos.get(1).getId());
-    assertEquals(currentTimeMinus5Seconds, savedGithubRepos.get(1).getLatestRecordedIssueTimestamp());
-    assertEquals("http://github.com/user/repo/issue2", savedGithubRepos.get(1).getLatestRecordedIssueUrl());
-//    verify(githubRepoServiceMock, times(1)).findLatestIssue("genericRepoId1");
-//    verify(githubRepoServiceMock, times(1)).findLatestIssue("genericRepoId2");
   }
 
   private void verifyEmailSentOnlyForSubscription1() {
