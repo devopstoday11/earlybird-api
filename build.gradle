@@ -95,7 +95,6 @@ jacocoTestCoverageVerification {
         })
     }
 }
-// switch back to dependsOn when coverage is solid again
 check.finalizedBy jacocoTestCoverageVerification
 
 checkstyle {
@@ -104,3 +103,4 @@ checkstyle {
 }
 check.dependsOn checkstyleMain
 check.dependsOn checkstyleTest
+build.dependsOn check
