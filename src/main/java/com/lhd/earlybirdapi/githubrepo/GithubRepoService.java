@@ -83,10 +83,10 @@ public class GithubRepoService {
   }
 
   private GithubRepo createAndSaveNewGithubRepo(String githubRepoId) {
-    Instant latestIssueCreatedAtTimestampInstant = findLatestIssueCreatedAtTimestamp(githubRepoId);
+    Instant latestIssueCreatedAtTimestamp = findLatestIssueCreatedAtTimestamp(githubRepoId);
     GithubRepo githubRepo = GithubRepo.builder()
         .id(githubRepoId)
-        .latestRecordedIssueTimestamp(latestIssueCreatedAtTimestampInstant)
+        .latestRecordedIssueTimestamp(latestIssueCreatedAtTimestamp)
         .build();
     githubRepoRepository.save(githubRepo);
     return githubRepo;

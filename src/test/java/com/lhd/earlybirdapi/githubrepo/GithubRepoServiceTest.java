@@ -1,14 +1,18 @@
 package com.lhd.earlybirdapi.githubrepo;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.lhd.earlybirdapi.subscription.SubscriptionRequestDto;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -125,6 +129,50 @@ public class GithubRepoServiceTest {
     assertEquals(githubRepo.getLatestRecordedIssueTimestamp(),
         savedGithubRepos.get(0).getLatestRecordedIssueTimestamp());
     assertEquals(githubRepo.getLatestRecordedIssueUrl(), savedGithubRepos.get(0).getLatestRecordedIssueUrl());
+  }
+
+
+  @Test
+  public void givenRepoExists_whenFindGithubRepo_thenReturnExistingRepo() {
+    SubscriptionRequestDto subscriptionRequestDto = new SubscriptionRequestDto(
+        "someone@email.com",
+        "some-owner",
+        "some-repo"
+    );
+    String githubRepoId = subscriptionRequestDto.getRepoOwner() + "/" + subscriptionRequestDto.getRepoName();
+    GithubRepo githubRepo = GithubRepo.builder()
+        .id("genericRepoId")
+        .latestRecordedIssueTimestamp(currentTime)
+        .build();
+    when(githubRepoRepositoryMock.findById(githubRepoId)).thenReturn(Optional.of(githubRepo));
+
+    GithubRepo actualGithubRepo = githubRepoService.findGithubRepo(subscriptionRequestDto);
+
+    verify(githubRepoRepositoryMock, times(1)).findById(githubRepoId);
+    assertThat(githubRepo).isEqualTo(actualGithubRepo);
+  }
+
+  @Test
+  public void givenRepoDoesNotExist_whenFindGithubRepo_thenSaveAndReturnNewRepo() {
+    SubscriptionRequestDto subscriptionRequestDto = new SubscriptionRequestDto(
+        "someone@email.com",
+        "some-owner",
+        "some-repo"
+    );
+    String githubRepoId = subscriptionRequestDto.getRepoOwner() + "/" + subscriptionRequestDto.getRepoName();
+    when(githubRepoRepositoryMock.findById(githubRepoId)).thenReturn(Optional.empty());
+    ResponseEntity<IssueDto[]> responseEntity = new ResponseEntity<>(new IssueDto[0], HttpStatus.OK);
+    when(restTemplateMock.getForEntity("/repos/" + githubRepoId + "/issues", IssueDto[].class))
+        .thenReturn(responseEntity);
+    GithubRepo expectedGithubRepo = GithubRepo.builder()
+        .id(githubRepoId)
+        .latestRecordedIssueTimestamp(Instant.EPOCH)
+        .build();
+
+    GithubRepo actualGithubRepo = githubRepoService.findGithubRepo(subscriptionRequestDto);
+
+    verify(githubRepoRepositoryMock, times(1)).findById(githubRepoId);
+    assertThat(expectedGithubRepo).isEqualToComparingFieldByField(actualGithubRepo);
   }
 
 }
