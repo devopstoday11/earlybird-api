@@ -21,8 +21,6 @@ public class Mailer {
     try {
       Message message = createMessage(to, notification);
       Transport.send(message);
-      System.out.println("Email sent to: " + to);
-
     } catch (MessagingException e) {
       // TODO: more graceful error handling here?
       throw new RuntimeException(e);
@@ -31,8 +29,7 @@ public class Mailer {
 
   private Message createMessage(String to, String notification) throws MessagingException {
     Message message = new MimeMessage(mailSession);
-    message.setRecipients(Message.RecipientType.TO,
-        InternetAddress.parse(to));
+    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
     message.setSubject("A New Issue is Open!");
     message.setText(notification);
     return message;

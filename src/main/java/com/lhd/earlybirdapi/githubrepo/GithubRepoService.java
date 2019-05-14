@@ -1,16 +1,14 @@
 package com.lhd.earlybirdapi.githubrepo;
 
 import com.lhd.earlybirdapi.subscription.SubscriptionRequestDto;
-
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GithubRepoService {
@@ -39,9 +37,34 @@ public class GithubRepoService {
     Optional<IssueDto> optionalIssueDto = findLatestIssue(githubRepo.getId());
     if (optionalIssueDto.isPresent()) {
       IssueDto latestIssue = optionalIssueDto.get();
-      githubRepo.setLatestRecordedIssueTimestamp(latestIssue.getCreatedAt());
-      githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
+      if (latestIssue.getCreatedAt().isAfter(githubRepo.getLatestRecordedIssueTimestamp())) {
+        githubRepo.setLatestRecordedIssueTimestamp(latestIssue.getCreatedAt());
+        githubRepo.setLatestRecordedIssueUrl(latestIssue.getHtmlUrl());
+      }
     }
+  }
+
+  private Optional<IssueDto> findLatestIssue(String githubRepoId) {
+    IssueDto[] issues = postForGithubRepoIssues(githubRepoId);
+    if (issues.length == 0) {
+      return Optional.empty();
+    }
+    return Optional.of(issues[0]);
+  }
+
+  private IssueDto[] postForGithubRepoIssues(String githubRepoId) {
+    String url = "/repos/" + githubRepoId + "/issues";
+    IssueDto[] issues;
+
+    try {
+      issues = restTemplate
+          .getForEntity(url, IssueDto[].class)
+          .getBody();
+    } catch (RestClientException e) {
+      throw new GithubApiRequestException(e.getMessage());
+    }
+
+    return issues;
   }
 
   public GithubRepo findGithubRepo(SubscriptionRequestDto subscriptionRequest) {
@@ -60,10 +83,10 @@ public class GithubRepoService {
   }
 
   private GithubRepo createAndSaveNewGithubRepo(String githubRepoId) {
-    Instant latestIssueCreatedAtTimestampInstant = findLatestIssueCreatedAtTimestamp(githubRepoId);
+    Instant latestIssueCreatedAtTimestamp = findLatestIssueCreatedAtTimestamp(githubRepoId);
     GithubRepo githubRepo = GithubRepo.builder()
         .id(githubRepoId)
-        .latestRecordedIssueTimestamp(latestIssueCreatedAtTimestampInstant)
+        .latestRecordedIssueTimestamp(latestIssueCreatedAtTimestamp)
         .build();
     githubRepoRepository.save(githubRepo);
     return githubRepo;
@@ -77,27 +100,6 @@ public class GithubRepoService {
     } else {
       return Instant.EPOCH;
     }
-  }
-
-  private Optional<IssueDto> findLatestIssue(String githubRepoId) {
-    IssueDto[] issues = postForGithubRepoIssues(githubRepoId);
-    return Optional.of(issues[0]);
-  }
-
-  private IssueDto[] postForGithubRepoIssues(String githubRepoId) {
-    String URL = "/repos/" + githubRepoId + "/issues";
-    IssueDto[] issues;
-
-    // TODO: each of the methods that could throw IOExceptions should handle it themselves
-    // we could remove the try/catch here in that case, and create more specific custom exceptions
-    try {
-      ResponseEntity<IssueDto[]> responseEntity = restTemplate.getForEntity(URL, IssueDto[].class);
-      issues = responseEntity.getBody();
-    } catch (RestClientException e) {
-      throw new GithubApiRequestException(e.getMessage());
-    }
-
-    return issues;
   }
 
 }
